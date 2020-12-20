@@ -50,7 +50,9 @@ public class InventoryAuditTests {
 		historyResult.ifPresentOrElse(inventoryRevision -> {
 			var revisionType = inventoryRevision.getMetadata().getRevisionType();
 			assertThat(revisionType).isEqualTo(RevisionMetadata.RevisionType.INSERT);
-			assertThat(inventoryRevision.getEntity()).isEqualTo(result);
+			Inventory entity = inventoryRevision.getEntity();
+			assertThat(entity.getQuantityAvailable()).isEqualTo(result.getQuantityAvailable());
+			assertThat(entity.getProduct().getId()).isEqualTo(result.getProduct().getId());
 		}, () -> fail("Should have found history record"));
 	}
 
@@ -59,7 +61,7 @@ public class InventoryAuditTests {
 		// We need a saved product and inventory for this testcase
 		var testProduct1 = createTestProduct();
 		var testProduct2 = createTestProduct();
-		int quantityAvailable = 10;
+		int quantityAvailable = 100;
 		var testInventory = new Inventory();
 		testInventory.setProduct(testProduct1);
 		var input = inventoryRepository.save(testInventory);
@@ -73,9 +75,10 @@ public class InventoryAuditTests {
 		historyResult.ifPresentOrElse(inventoryRevision -> {
 			var revisionType = inventoryRevision.getMetadata().getRevisionType();
 			assertThat(revisionType).isEqualTo(RevisionMetadata.RevisionType.UPDATE);
-			assertThat(inventoryRevision.getEntity()).isEqualTo(result);
-			var productSubject = inventoryRevision.getEntity().getProduct();
-			assertThat(productSubject).isEqualTo(testProduct2);
+			var entity = inventoryRevision.getEntity();
+			assertThat(entity.getQuantityAvailable()).isEqualTo(result.getQuantityAvailable());
+			var productSubjectName = entity.getProduct().getName();
+			assertThat(productSubjectName).isEqualTo(testProduct2.getName());
 		}, () -> fail("Should have found history record"));
 		assertThat(allHistoryResult).hasSize(2);
 	}
