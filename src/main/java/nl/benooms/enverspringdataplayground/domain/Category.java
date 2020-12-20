@@ -1,6 +1,7 @@
 package nl.benooms.enverspringdataplayground.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,8 @@ import java.util.Set;
  */
 @Data
 @Entity
-public class Category {
+@EqualsAndHashCode(callSuper=false)
+public class Category extends AbstractAuditedEntity{
 	@Id
 	@GeneratedValue
 	Long id;

@@ -1,6 +1,7 @@
 package nl.benooms.enverspringdataplayground.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
@@ -14,7 +15,8 @@ import java.math.BigDecimal;
  */
 @Data
 @Entity
-public class Product {
+@EqualsAndHashCode(callSuper=false)
+public class Product  extends AbstractAuditedEntity{
 	@Id
 	@GeneratedValue
 	Long id;

@@ -33,6 +33,11 @@ public class ProductAuditTests {
 		var result = productRepository.save(testProduct);
 		var latestRevision = productHistoryRepository.findLastChangeRevision(result.getId());
 
+		var user = "Gebruiker";
+		assertThat(result.getCreatedByUser()).isEqualTo(user);
+		assertThat(result.getCreatedDate()).isNotNull();
+		assertThat(result.getLastModifiedByUser()).isEqualTo(user);
+		assertThat(result.getLastModifiedDate()).isEqualTo(result.getCreatedDate());
 		latestRevision.ifPresentOrElse(inventoryRevision -> {
 			var revisionType = inventoryRevision.getMetadata().getRevisionType();
 			assertThat(revisionType).isEqualTo(RevisionMetadata.RevisionType.INSERT);
